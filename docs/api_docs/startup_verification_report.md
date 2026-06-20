@@ -8,7 +8,7 @@ Date: 2026-06-20
 py -3.11 -m pip install -r backend\requirements.txt
 ```
 
-Result: completed successfully after allowing enough time for ML wheels.
+Result: dependencies installed, including XGBoost and SentenceTransformers.
 
 ## Static Runtime Check
 
@@ -16,17 +16,33 @@ Result: completed successfully after allowing enough time for ML wheels.
 py -3.11 -m compileall backend\app
 ```
 
-Result: completed successfully.
+Result: passed.
 
-## FastAPI Startup
+## Startup Path
 
-```bash
-py -3.11 -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+FastAPI startup performs:
+
+1. Singleton model registry load.
+2. Closure model validation.
+3. MongoDB Atlas connection.
+4. Redis cache initialization with graceful degradation.
+
+Observed startup logs include:
+
+```text
+Loaded asset closure_prediction_model_v2
+Model class: XGBClassifier
+Model registry initialized with 26 assets and 0 load errors
+MongoDB URI host: gridlock.fja4wdu.mongodb.net
+Connected to MongoDB database gridlock
+Redis unavailable; continuing without cache
 ```
 
-Result: foreground startup stayed active until the verification timeout, which confirms the app imports and starts.
+## Production Failure Rules
 
-Note: background HTTP probing was blocked by the Windows Store Python launcher in this shell when run through `Start-Job`/`Start-Process`. API behavior was verified through FastAPI `TestClient`.
+- Closure model missing or unloadable: startup fails.
+- MongoDB unavailable: startup fails unless `ALLOW_DEGRADED_MODE=true`.
+- Redis unavailable: warning only, cache disabled.
 
 ## Environment
 

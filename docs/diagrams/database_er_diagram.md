@@ -2,9 +2,17 @@
 
 ```mermaid
 erDiagram
+    USERS ||--o{ INCIDENTS : may_create
     INCIDENTS ||--o{ PREDICTIONS : has
     INCIDENTS ||--o{ SIMILAR_INCIDENTS : links
-    USERS ||--o{ INCIDENTS : may_create
+    ANALYTICS }o--|| INCIDENTS : summarizes
+
+    USERS {
+        objectId _id PK
+        string email
+        string role
+        datetime created_at
+    }
 
     INCIDENTS {
         objectId _id PK
@@ -39,10 +47,11 @@ erDiagram
     SIMILAR_INCIDENTS {
         objectId _id PK
         string incident_id FK
-        int similar_incident_id
+        string similar_incident_id
         float similarity_score
         float clearance_time
         string historical_outcome
+        datetime created_at
     }
 
     ANALYTICS {
@@ -52,12 +61,8 @@ erDiagram
         int total_incidents
         int critical_incidents
         float average_clearance
-    }
-
-    USERS {
-        objectId _id PK
-        string email
-        string role
+        object priority_distribution
+        object resource_allocation
         datetime created_at
     }
 ```

@@ -2,80 +2,113 @@
 
 Date: 2026-06-20
 
-## Test Command
+## Static Runtime Check
 
 ```bash
-py -3.11 -m pytest
+py -3.11 -m compileall backend\app
 ```
 
-## Result
+Result: passed.
+
+## Focus Scenario
+
+The tanker accident scenario was tested through FastAPI `TestClient` against:
 
 ```text
-2 passed, 1 warning
+POST /api/v1/analyze
+POST /api/v1/debug/closure
 ```
 
-## Covered Endpoints
-
-- `GET /api/v1/health`
-- `POST /api/v1/predict/closure`
-- `POST /api/v1/predict/priority`
-- `POST /api/v1/predict/clearance`
-- `POST /api/v1/predict/resources`
-- `POST /api/v1/retrieve/similar`
-- `POST /api/v1/intelligence/cause`
-- `POST /api/v1/copilot`
-- `POST /api/v1/analyze`
-- `GET /api/v1/dashboard/kpis`
-- `GET /api/v1/dashboard/incidents`
-- `GET /api/v1/dashboard/heatmap`
-- `GET /api/v1/dashboard/corridors`
-- `GET /api/v1/dashboard/resources`
-
-## Sample Request
+Request:
 
 ```json
 {
   "event_type": "accident",
-  "corridor": "Outer Ring Road",
-  "zone": "East",
-  "description": "Multi-vehicle crash blocking two lanes near a junction",
+  "corridor": "ORR East 1",
+  "zone": "East Zone",
+  "description": "Fuel tanker collision causing severe congestion near Marathahalli junction",
   "severity": "critical",
   "metadata": {
-    "source": "test"
+    "event_category": "unplanned"
   }
 }
 ```
 
-## Sample Unified Response Shape
+## Analyze Result
+
+```text
+HTTP 200 OK
+```
+
+Key response values:
 
 ```json
 {
-  "incident_id": "mongodb-object-id-or-local-demo-id",
   "closure_prediction": {
     "closure_required": true,
-    "confidence": 0.68,
-    "model_version": "fallback-v1"
+    "confidence": 0.72,
+    "model_version": "Closure Prediction V2"
   },
   "priority": {
     "priority_level": "high",
-    "priority_score": 0.7,
-    "factors": {}
+    "priority_score": 0.665
   },
   "clearance": {
-    "estimated_minutes": 55.0,
-    "confidence": 0.75,
+    "estimated_minutes": 46.7,
+    "confidence": 0.462,
     "basis": "retrieval"
   },
   "resources": {
-    "officers": 3,
-    "tow_trucks": 2,
-    "traffic_units": 2,
-    "ambulance_units": 1,
-    "notes": []
+    "officers": 5,
+    "tow_trucks": 1,
+    "traffic_units": 3,
+    "ambulance_units": 2,
+    "officer_requirement": "4-6 Officers",
+    "tow_truck_requirement": "1 Tow Truck",
+    "resource_level": "High Resource Requirement"
   },
-  "similar_incidents": [],
-  "causes": [],
-  "recommended_actions": [],
-  "copilot_summary": {}
+  "copilot_summary": {
+    "llm_status": "accepted"
+  }
 }
 ```
+
+## Copilot Verification
+
+Groq returned valid JSON and was accepted by grounding guardrails.
+
+The returned briefing contains:
+
+- `incident_summary`
+- `risk_assessment`
+- `resource_explanation`
+- `historical_context`
+- `commander_recommendation`
+
+The previous duplicated-number issue was addressed by sending Groq a compact structured context instead of the full prediction JSON.
+
+## Closure Debug Verification
+
+`POST /api/v1/debug/closure` returned:
+
+```json
+{
+  "class_labels": [0, 1],
+  "positive_class_index": 1,
+  "positive_probability": 0.0263,
+  "final_probability": 0.72,
+  "closure_required": true,
+  "calibration": {
+    "applied": true,
+    "type": "critical_hazardous_collision_operational_floor"
+  }
+}
+```
+
+The raw XGBoost probability remains visible for auditability. The final returned closure confidence applies an explicit operational calibration for critical hazardous collision signals.
+
+## Notes
+
+- MongoDB Atlas connected successfully during the scenario.
+- Redis was unavailable locally and degraded gracefully without blocking the API.
+- Full pytest was interrupted during interactive work; rerun `py -3.11 -m pytest` before final submission if a fresh full-suite report is required.
