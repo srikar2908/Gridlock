@@ -8,10 +8,10 @@ class ResourceService:
     ) -> ResourceRecommendation:
         event = incident.event_type.lower().replace("_", " ")
         text = f"{event} {incident.description}".lower()
-        critical = priority.priority_level == "critical"
+        critical = priority.priority_level == "critical" or (incident.severity or "").lower() == "critical"
         high = priority.priority_level == "high"
         road_blocking = any(term in text for term in ["accident", "tree fall", "water logging", "flood", "construction", "procession"])
-        vehicle_issue = any(term in text for term in ["breakdown", "vehicle", "truck", "lcv", "tow"])
+        vehicle_issue = any(term in text for term in ["accident", "breakdown", "collision", "crash", "tanker", "vehicle", "truck", "lcv", "tow"])
         medical_risk = any(term in text for term in ["accident", "injury", "fire", "fatal", "crash"])
 
         if critical:
@@ -24,8 +24,12 @@ class ResourceService:
             officers = 1
 
         tow_trucks = 2 if vehicle_issue and (high or critical or clearance.estimated_minutes >= 60) else 1 if vehicle_issue else 0
+        if event == "accident" or "accident" in text or "collision" in text or "crash" in text:
+            tow_trucks = max(tow_trucks, 1)
         traffic_units = 3 if critical else 2 if high or road_blocking else 1
         ambulance_units = 2 if critical and medical_risk else 1 if medical_risk else 0
+        if critical:
+            ambulance_units = max(ambulance_units, 1)
         resource_level = self._resource_level(officers, tow_trucks, traffic_units, ambulance_units)
         rationale = [
             f"Priority is {priority.priority_level} with score {priority.priority_score}.",

@@ -24,6 +24,8 @@ class Settings(BaseSettings):
     enable_redis_cache: bool = True
     rate_limit_requests: int = 120
     rate_limit_window_seconds: int = 60
+    allow_degraded_mode: bool = False
+    use_faiss_retrieval: bool = False
 
     jwt_secret: str = ""
     auth_required: bool = False

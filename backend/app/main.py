@@ -4,7 +4,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api.routes import analyze, clearance, closure, copilot, dashboard, health, intelligence, priority, resource
+from app.api.routes import analyze, clearance, closure, copilot, dashboard, debug, diagnostics, health, intelligence, priority, resource
 from app.core.config import get_settings
 from app.core.logger import configure_logging, get_logger
 from app.core.registry import model_registry
@@ -20,10 +20,7 @@ settings = get_settings()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     model_registry.load_models(settings)
-    try:
-        await mongo.connect(settings)
-    except Exception as exc:
-        logger.warning("MongoDB startup connection failed; continuing degraded: %s", exc)
+    await mongo.connect(settings)
     yield
     await mongo.close()
 
@@ -62,6 +59,8 @@ app.include_router(analyze.router, prefix=settings.api_v1_prefix)
 app.include_router(copilot.router, prefix=settings.api_v1_prefix)
 app.include_router(intelligence.router, prefix=settings.api_v1_prefix)
 app.include_router(dashboard.router, prefix=settings.api_v1_prefix)
+app.include_router(diagnostics.router, prefix=settings.api_v1_prefix)
+app.include_router(debug.router, prefix=settings.api_v1_prefix)
 
 
 @app.get("/")

@@ -38,10 +38,14 @@ class ResourceRecommendation(BaseModel):
 
 
 class SimilarIncidentResponse(BaseModel):
-    similar_incident_id: int
+    similar_incident_id: str
     similarity_score: float
     clearance_time: float
     historical_outcome: str
+    event_cause: str | None = None
+    corridor: str | None = None
+    zone: str | None = None
+    outcome: str | None = None
 
 
 class AnalyzeResponse(BaseModel):

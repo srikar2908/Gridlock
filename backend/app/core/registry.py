@@ -41,11 +41,15 @@ class ModelRegistry:
                 logger.warning("Failed loading asset %s from %s: %s", key, path, exc)
 
         self.closure_model = self.get_model("closure_prediction_model_v2")
+        if self.closure_model is None:
+            raise RuntimeError("Required closure model closure_prediction_model_v2 failed to load")
+        logger.info("Loaded asset closure_prediction_model_v2")
+        logger.info("Model class: %s", type(self.closure_model).__name__)
         self.encoders = self.get_model("closure_label_encoders", {})
         self.closure_metadata = self.get_model("closure_model_metadata_v2", {})
         self.corridor_priority = self.get_model("corridor_priority_lookup", {})
         self.zone_priority = self.get_model("zone_priority_lookup", {})
-        self.retrieval_df = self.get_model("retrieval_df") or self.get_model("retrieval_df_1")
+        self.retrieval_df = self.get_model("retrieval_df")
         self.retrieval_embeddings = self.get_model("retrieval_embeddings")
         self.retrieval_metadata = self.get_model("hybrid_retrieval_metadata", {})
         self.faiss_indexes = {key: value for key, value in self.models.items() if key.endswith("_index")}
@@ -111,3 +115,5 @@ class ModelRegistry:
 
 
 model_registry = ModelRegistry()
+print(model_registry.list_models())
+#print(type(model_registry.faiss_indexes["unplanned_accident_index"]))
