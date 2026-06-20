@@ -71,14 +71,20 @@ class ModelRegistry:
             import faiss
 
             return faiss.read_index(str(path))
-        if path.suffix.lower() == ".joblib":
+        if path.suffix.lower() in {".joblib", ".pkl"}:
             import joblib
 
-            return joblib.load(path)
-        import pickle
+            try:
+                return joblib.load(path)
+            except Exception as joblib_error:
+                import pickle
 
-        with path.open("rb") as file:
-            return pickle.load(file)
+                try:
+                    with path.open("rb") as file:
+                        return pickle.load(file)
+                except Exception as pickle_error:
+                    raise RuntimeError(f"joblib failed: {joblib_error}; pickle failed: {pickle_error}") from pickle_error
+        raise ValueError(f"Unsupported asset type: {path.suffix}")
 
     @staticmethod
     def _load_pickle(path: Path, default: Any = None) -> Any:

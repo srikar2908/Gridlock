@@ -5,6 +5,8 @@ from typing import List
 from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+BACKEND_DIR = Path(__file__).resolve().parents[2]
+
 
 class Settings(BaseSettings):
     app_name: str = "GRIDLOCK SENTINEL API"
@@ -15,8 +17,9 @@ class Settings(BaseSettings):
     mongodb_uri: str = Field(default="", description="MongoDB Atlas connection string.")
     database_name: str = "gridlock"
     groq_api_key: str = ""
-    groq_primary_model: str = "llama-4-scout"
-    groq_fallback_model: str = "qwen3-32b"
+    groq_primary_model: str = "meta-llama/llama-4-scout-17b-16e-instruct"
+    groq_fallback_model: str = "qwen/qwen3-32b"
+    groq_timeout_seconds: float = 8.0
     redis_url: str = "redis://localhost:6379/0"
     enable_redis_cache: bool = True
     rate_limit_requests: int = 120
@@ -27,10 +30,10 @@ class Settings(BaseSettings):
     allowed_roles: List[str] = ["admin", "operator", "analyst"]
 
     cors_origins: List[str] = ["http://localhost:5173", "http://localhost:3000"]
-    assets_dir: Path = Path("assets")
+    assets_dir: Path = BACKEND_DIR / "assets"
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=BACKEND_DIR / ".env",
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",

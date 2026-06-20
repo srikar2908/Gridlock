@@ -27,6 +27,13 @@ class ResourceRecommendation(BaseModel):
     tow_trucks: int
     traffic_units: int
     ambulance_units: int
+    officer_requirement: str
+    tow_truck_requirement: str
+    traffic_unit_requirement: str
+    ambulance_requirement: str
+    resource_level: str
+    summary: str
+    rationale: List[str]
     notes: List[str]
 
 
