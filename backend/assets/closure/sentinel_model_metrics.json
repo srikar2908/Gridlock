@@ -1,0 +1,8 @@
+{
+    "closure_model_auc": 0.764,
+    "closure_model_f1": 0.36,
+    "priority_model_accuracy": 0.999,
+    "priority_model_f1": 0.999,
+    "clearance_model_mae": 34.19,
+    "clearance_model_type": "Hybrid Digital Twin Retrieval"
+}

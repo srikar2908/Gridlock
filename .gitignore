@@ -1,0 +1,16 @@
+.env
+backend/.env
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+uvicorn.out.log
+uvicorn.err.log
+.venv/
+venv/
+env/
+dist/
+build/
+*.egg-info/
+.DS_Store
