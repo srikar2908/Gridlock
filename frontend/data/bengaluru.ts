@@ -1,0 +1,98 @@
+export const corridorCoordinates: Record<string, { lat: number; lng: number; zone: string; landmark: string }> = {
+  "Outer Ring Road": { lat: 12.9352, lng: 77.6948, zone: "East", landmark: "Marathahalli Bridge" },
+  "Marathahalli": { lat: 12.9569, lng: 77.7011, zone: "East", landmark: "Marathahalli Tank" },
+  "Silk Board": { lat: 12.9177, lng: 77.6238, zone: "South", landmark: "Silk Board Junction" },
+  "KR Puram": { lat: 13.0076, lng: 77.6958, zone: "East", landmark: "KR Puram Bridge" },
+  "Hebbal": { lat: 13.0358, lng: 77.597, zone: "North", landmark: "Hebbal Flyover" },
+  "MG Road": { lat: 12.9756, lng: 77.6067, zone: "Central", landmark: "MG Road Metro" },
+  "Whitefield": { lat: 12.9698, lng: 77.75, zone: "East", landmark: "Hope Farm Junction" },
+  "Airport Road": { lat: 13.0617, lng: 77.6092, zone: "North", landmark: "Kempapura Junction" },
+  "Electronic City": { lat: 12.8452, lng: 77.6602, zone: "South", landmark: "Elevated Expressway" },
+  "Mysore Road": { lat: 12.9538, lng: 77.5407, zone: "West", landmark: "Satellite Bus Station" },
+};
+
+export const demoScenarios = [
+  {
+    name: "Marathahalli Tanker Collision",
+    event_type: "accident",
+    corridor: "Marathahalli",
+    zone: "East",
+    severity: "critical",
+    description: "Fuel tanker collision blocks two ORR lanes near Marathahalli Tank with spill risk and peak-hour queue buildup.",
+    metadata: { event_category: "unplanned" },
+  },
+  {
+    name: "Silk Board Multi Vehicle Crash",
+    event_type: "accident",
+    corridor: "Silk Board",
+    zone: "South",
+    severity: "critical",
+    description: "Four-vehicle pileup at Silk Board Junction affecting Hosur Road and BTM feeder movements.",
+    metadata: { event_category: "unplanned" },
+  },
+  {
+    name: "KR Puram Water Logging",
+    event_type: "water_logging",
+    corridor: "KR Puram",
+    zone: "East",
+    severity: "high",
+    description: "Heavy rain creates water logging under KR Puram Bridge, slowing bus and freight movement.",
+    metadata: { event_category: "unplanned" },
+  },
+  {
+    name: "Hebbal Truck Breakdown",
+    event_type: "vehicle_breakdown",
+    corridor: "Hebbal",
+    zone: "North",
+    severity: "high",
+    description: "Loaded truck stalled on Hebbal Flyover ramp, reducing airport-bound carriageway capacity.",
+    metadata: { event_category: "unplanned" },
+  },
+  {
+    name: "MG Road Protest",
+    event_type: "protest",
+    corridor: "MG Road",
+    zone: "Central",
+    severity: "medium",
+    description: "Dense protest march near MG Road Metro, requiring rolling barricades and bus diversions.",
+    metadata: { event_category: "planned" },
+  },
+  {
+    name: "Whitefield Construction Bottleneck",
+    event_type: "construction",
+    corridor: "Whitefield",
+    zone: "East",
+    severity: "medium",
+    description: "Metro work barricading creates a construction bottleneck near Hope Farm Junction.",
+    metadata: { event_category: "planned" },
+  },
+  {
+    name: "Airport Road VIP Movement",
+    event_type: "procession",
+    corridor: "Airport Road",
+    zone: "North",
+    severity: "high",
+    description: "VIP convoy movement requires staged signal holds on Airport Road and feeder restrictions.",
+    metadata: { event_category: "planned" },
+  },
+] as const;
+
+export const coverageAssets = [
+  { type: "Police Station", name: "HAL Police Station", lat: 12.9592, lng: 77.6625 },
+  { type: "Police Station", name: "Madiwala Traffic Police Station", lat: 12.9231, lng: 77.6175 },
+  { type: "Police Station", name: "Hebbal Traffic Police Station", lat: 13.0384, lng: 77.5899 },
+  { type: "Hospital", name: "Manipal Hospital Old Airport Road", lat: 12.9596, lng: 77.6494 },
+  { type: "Hospital", name: "Sakra World Hospital", lat: 12.9307, lng: 77.6833 },
+  { type: "Hospital", name: "Aster CMI Hospital", lat: 13.0545, lng: 77.5924 },
+  { type: "Tow Depot", name: "East Zone Tow Yard", lat: 12.9828, lng: 77.7141 },
+  { type: "Tow Depot", name: "South Recovery Depot", lat: 12.901, lng: 77.6185 },
+  { type: "Tow Depot", name: "North Highway Recovery Yard", lat: 13.0724, lng: 77.6029 },
+];
+
+export const zoneCenters: Record<string, [number, number]> = {
+  East: [12.971, 77.705],
+  South: [12.895, 77.625],
+  North: [13.045, 77.603],
+  Central: [12.976, 77.604],
+  West: [12.96, 77.545],
+};
