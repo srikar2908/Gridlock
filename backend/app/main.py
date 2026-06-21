@@ -11,6 +11,7 @@ from app.core.registry import model_registry
 from app.database.client import mongo
 from app.middleware.rate_limit import RateLimitMiddleware
 from app.middleware.request_id import RequestIdMiddleware
+from app.api.routes import ors
 
 configure_logging()
 logger = get_logger(__name__)
@@ -40,7 +41,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.add_middleware(RequestIdMiddleware)
-app.add_middleware(RateLimitMiddleware)
+#app.add_middleware(RateLimitMiddleware)
 
 
 @app.exception_handler(Exception)
@@ -48,7 +49,10 @@ async def global_exception_handler(request: Request, exc: Exception):
     logger.exception("Unhandled error on %s", request.url.path)
     return JSONResponse(status_code=500, content={"detail": "Internal server error"})
 
-
+app.include_router(
+    ors.router,
+    prefix=settings.api_v1_prefix
+)
 app.include_router(health.router, prefix=settings.api_v1_prefix)
 app.include_router(closure.router, prefix=settings.api_v1_prefix)
 app.include_router(priority.router, prefix=settings.api_v1_prefix)

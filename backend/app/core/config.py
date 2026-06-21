@@ -27,6 +27,11 @@ class Settings(BaseSettings):
     allow_degraded_mode: bool = False
     use_faiss_retrieval: bool = False
 
+
+    ors_api_key: str = ""
+
+    groq_primary_model: str = "meta-llama/llama-4-scout-17b-16e-instruct"
+
     jwt_secret: str = ""
     auth_required: bool = False
     allowed_roles: List[str] = ["admin", "operator", "analyst"]
