@@ -4,6 +4,9 @@ GRIDLOCK is the backend-first implementation of the SENTINEL AI Traffic Intellig
 
 The current repository contains a production-ready FastAPI backend and a placeholder frontend structure for later UI work.
 
+## Video Demonstration link
+    https://go.screenpal.com/watch/cO1rl9nuKOM
+
 ## Current Scope
 
 - Backend: implemented
